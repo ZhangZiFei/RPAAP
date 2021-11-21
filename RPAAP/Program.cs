@@ -14,11 +14,12 @@ namespace RPAAP
         //static void Main(string[] args)
         static void Main()
         {
-            new ResponseClientStd();//RequestClientStdTest();//
+            new ResponseClientStdTest();//RequestClientStdTest();//
             //JsonTest();
             //Test();
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:删除未使用的私有成员", Justification = "<挂起>")]
         static void RequestClientStdTest()
         {
             var p = Tool.R.Request("a", "b", new Dictionary<string, Param>
@@ -26,8 +27,10 @@ namespace RPAAP
                 { "a", new Param("说說发發\na") }
             });
             Console.WriteLine(p["a"].Value);
+            Console.ReadLine();
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:删除未使用的私有成员", Justification = "<挂起>")]
         static void JsonTest()
         {
             var d = new Dictionary<string, Param>
@@ -55,6 +58,21 @@ namespace RPAAP
 
             var d2 = JsonConvert.DeserializeObject<RequestData>(s);
             Console.WriteLine(d2);
+        }
+    }
+
+    class ResponseClientStdTest : ResponseClientStd
+    {
+        protected override ResponseData RunAction(RequestData requestData)
+        {
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            throw new Exception("说说 說說");
+            //return new ResponseData(new Dictionary<string, Param>() {
+            //    { "ObjectName", new Param(requestData.ObjectName)},
+            //    { "Action", new Param(requestData.Action)},
+            //    { "test", new Param("说说 說說")},
+            //    { "a", new Param((string)requestData.InputParams["a"].Value)}
+            //});
         }
     }
 }

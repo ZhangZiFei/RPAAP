@@ -11,7 +11,7 @@ namespace RPAAP
     /// <summary>
     /// RPA Action 标准输入输出 响应端
     /// </summary>
-    class ResponseClientStd : ResponseClient
+    public abstract class ResponseClientStd : ResponseClient
     {
         public ResponseClientStd()
             : base()
@@ -21,7 +21,6 @@ namespace RPAAP
 
         protected override RequestData Request()
         {
-            //string s = Tool.ReadLine(READLINE_BUFFER_SIZE);
             string s =Console.ReadLine();
 
             if (s.Length == 0)
@@ -33,18 +32,6 @@ namespace RPAAP
             {
                 return JsonConvert.DeserializeObject<RequestData>(s);
             }
-        }
-
-        protected override ResponseData RunAction(RequestData requestData)
-        {
-            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            throw new Exception("说说 說說");
-            //return new ResponseData(new Dictionary<string, Param>() {
-            //    { "ObjectName", new Param(requestData.ObjectName)},
-            //    { "Action", new Param(requestData.Action)},
-            //    { "test", new Param("说说 說說")},
-            //    { "a", new Param((string)requestData.InputParams["a"].Value)}
-            //});
         }
 
         protected override void Response(ResponseData responseData)

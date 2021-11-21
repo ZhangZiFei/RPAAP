@@ -12,7 +12,16 @@
             RequestData r = Request();
             while (r != null)
             {
-                Response(RunAction(r));
+                ResponseData res;
+                try
+                {
+                    res = RunAction(r);
+                }
+                catch (System.Exception e)
+                {
+                    res = new ResponseData(new System.Collections.Generic.Dictionary<string, Param>(), e.ToString());
+                }
+                Response(res);
                 r = Request();
             }
         }

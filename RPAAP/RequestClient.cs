@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace RPAAP
 {
@@ -21,7 +22,15 @@ namespace RPAAP
         /// <returns>相应参数</returns>
         public Dictionary<string, Param> Request(string objectName, string action, Dictionary<string, Param> params_)
         {
-            return Request(new RequestData(objectName, action, params_)).OutputParams;
+            ResponseData res = Request(new RequestData(objectName, action, params_));
+            if (res.Error.Equals(""))
+            {
+                return res.OutputParams;
+            }
+            else
+            {
+                throw new Exception(res.Error);
+            }
         }
 
         /// <summary>

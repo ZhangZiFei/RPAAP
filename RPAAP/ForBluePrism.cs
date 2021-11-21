@@ -191,10 +191,16 @@ namespace ForBluePrism
         /// </summary>
         public Version Version => version;
 
+        /// <summary>
+        /// 异常信息
+        /// </summary>
+        public string Error => error;
+
         /// <param name="outputParams">输出参数</param>
-        public ResponseData(Dictionary<string, Param> outputParams)
+        public ResponseData(Dictionary<string, Param> outputParams, string error = "")
         {
             this.outputParams = outputParams;
+            this.error = error;
         }
 
         [JsonProperty]
@@ -202,7 +208,11 @@ namespace ForBluePrism
 
         [JsonProperty]
         private readonly Dictionary<string, Param> outputParams;
+
+        [JsonProperty]
+        private readonly string error;
     }
+
 
     /// <summary>
     /// RPA Action请求端
@@ -223,7 +233,15 @@ namespace ForBluePrism
         /// <returns>相应参数</returns>
         public Dictionary<string, Param> Request(string objectName, string action, Dictionary<string, Param> params_)
         {
-            return Request(new RequestData(objectName, action, params_)).OutputParams;
+            ResponseData res = Request(new RequestData(objectName, action, params_));
+            if (res.Error.Equals(""))
+            {
+                return res.OutputParams;
+            }
+            else
+            {
+                throw new Exception(res.Error);
+            }
         }
 
         /// <summary>
@@ -270,7 +288,16 @@ namespace ForBluePrism
         {
             ProcessWriter.WriteLine(JsonConvert.SerializeObject(requestData));
             ProcessWriter.Flush();
-            return JsonConvert.DeserializeObject<ResponseData>(Process.StandardOutput.ReadLine());
+            var s = Process.StandardOutput.ReadLine();
+            if (s != null)
+            {
+                return JsonConvert.DeserializeObject<ResponseData>(s);
+            }
+            else
+            {
+                Process.StandardError.ReadToEnd();
+                throw new Exception("Action意外结束");
+            }
         }
 
         public override void Dispose()

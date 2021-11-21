@@ -40,7 +40,16 @@ namespace RPAAP
         {
             ProcessWriter.WriteLine(JsonConvert.SerializeObject(requestData));
             ProcessWriter.Flush();
-            return JsonConvert.DeserializeObject<ResponseData>(Process.StandardOutput.ReadLine());
+            var s = Process.StandardOutput.ReadLine();
+            if (s != null)
+            {
+                return JsonConvert.DeserializeObject<ResponseData>(s);
+            }
+            else
+            {
+                Process.StandardError.ReadToEnd();
+                throw new Exception("Action意外结束");
+            }
         }
 
         public override void Dispose()

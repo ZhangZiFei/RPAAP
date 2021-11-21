@@ -20,10 +20,16 @@ namespace RPAAP
         /// </summary>
         public Version Version => version;
 
+        /// <summary>
+        /// 异常信息
+        /// </summary>
+        public string Error => error;
+
         /// <param name="outputParams">输出参数</param>
-        public ResponseData(Dictionary<string, Param> outputParams)
+        public ResponseData(Dictionary<string, Param> outputParams, string error = "")
         {
             this.outputParams = outputParams;
+            this.error = error;
         }
 
         [JsonProperty]
@@ -31,5 +37,8 @@ namespace RPAAP
 
         [JsonProperty]
         private readonly Dictionary<string, Param> outputParams;
+
+        [JsonProperty]
+        private readonly string error;
     }
 }
