@@ -14,12 +14,12 @@ namespace RPAAP
         //static void Main(string[] args)
         static void Main()
         {
-            new ResponseClientStdTest();//RequestClientStdTest();//
+            RequestClientStdTest();//new ResponseClientStdTest();//
             //JsonTest();
             //Test();
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:删除未使用的私有成员", Justification = "<挂起>")]
+        //[System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:删除未使用的私有成员", Justification = "<挂起>")]
         static void RequestClientStdTest()
         {
             var p = Tool.R.Request("a", "b", new Dictionary<string, Param>
@@ -35,18 +35,7 @@ namespace RPAAP
         {
             var d = new Dictionary<string, Param>
             {
-                { "a", new Param("说说 說說\n") },
-                { "b", new Param(233) },
-                { "c", new Param(new DataTable
-                        {
-                            Columns = { "a","b","c" },
-                            Rows = {
-                                {1,1,1 },
-                                {2,2,2 }
-                            },
-                        }
-                    )
-                }
+                { "a", new Param("说说 說說\n") }
             };
             var r = new RequestData("q", "a", d);
             var s = JsonConvert.SerializeObject(r);
@@ -61,18 +50,19 @@ namespace RPAAP
         }
     }
 
+    /// <summary>
+    /// RPA Action 标准输入输出 响应端(测试)
+    /// </summary>
     class ResponseClientStdTest : ResponseClientStd
     {
         protected override ResponseData RunAction(RequestData requestData)
         {
-            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            throw new Exception("说说 說說");
-            //return new ResponseData(new Dictionary<string, Param>() {
-            //    { "ObjectName", new Param(requestData.ObjectName)},
-            //    { "Action", new Param(requestData.Action)},
-            //    { "test", new Param("说说 說說")},
-            //    { "a", new Param((string)requestData.InputParams["a"].Value)}
-            //});
+            return new ResponseData(new Dictionary<string, Param>() {
+                { "ObjectName", new Param(requestData.ObjectName)},
+                { "Action", new Param(requestData.Action)},
+                { "test", new Param("说说 說說")},
+                { "a", new Param((string)requestData.InputParams["a"].Value)}
+            });
         }
     }
 }
