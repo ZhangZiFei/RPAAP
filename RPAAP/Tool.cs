@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace RPAAP
 {
-    public static class Tool
+    static class Tool
     {
         public static string ExePath = @"E:\zifeiobject\RPAAP\RPAAP\bin\Debug\ResponseClientStdTest.exe";
         public static RequestClientStd R
