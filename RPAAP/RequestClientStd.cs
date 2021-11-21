@@ -1,22 +1,18 @@
-﻿using System;
-using System.Diagnostics;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Diagnostics;
 using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
+using System.IO;
+using System;
 
 namespace RPAAP
 {
     /// <summary>
     /// RPA Action 标准输入输出 请求端
     /// </summary>
-    class RequestClientStd : RequestClient
+    public class RequestClientStd : RequestClient
     {
         public RequestClientStd(string processPath)
         {
-            Console.InputEncoding = Tool.DefEncoding;
-            Console.OutputEncoding = Tool.DefEncoding;
             Process = new Process()
             {
                 StartInfo = new ProcessStartInfo(processPath)
@@ -32,24 +28,40 @@ namespace RPAAP
             Process.StartInfo.StandardErrorEncoding = Tool.DefEncoding;
             Process.StartInfo.UseShellExecute = false;
             Process.Start();
+            ProcessWriter = new StreamWriter(Process.StandardInput.BaseStream, Tool.DefEncoding, 4096);
         }
 
         ~RequestClientStd()
         {
-            Process.Dispose();
-            Process.Close();
+            Dispose();
         }
 
         protected override ResponseData Request(RequestData requestData)
         {
-            var s = JsonConvert.SerializeObject(requestData);
-            Console.WriteLine("------------------Request---------requestData--------------");
-            Console.WriteLine(s);
-            Process.StandardInput.WriteLine(s);
-            var s2 = Process.StandardOutput.ReadLine();
-            return JsonConvert.DeserializeObject<ResponseData>(s2);
+            ProcessWriter.WriteLine(JsonConvert.SerializeObject(requestData));
+            ProcessWriter.Flush();
+            return JsonConvert.DeserializeObject<ResponseData>(Process.StandardOutput.ReadLine());
         }
 
-        private readonly Process Process;
+        public override void Dispose()
+        {
+            if (Process != null)
+            {
+                ProcessWriter.WriteLine();
+                ProcessWriter.Flush();
+                Process.StandardOutput.ReadLine();
+
+                ProcessWriter.Close();
+                ProcessWriter.Dispose();
+                ProcessWriter = null;
+
+                Process.Close();
+                Process.Dispose();
+                Process = null;
+            }
+        }
+
+        private Process Process;
+        private StreamWriter ProcessWriter;
     }
 }

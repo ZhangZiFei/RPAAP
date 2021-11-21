@@ -9,51 +9,40 @@ namespace RPAAP
 {
     public static class Tool
     {
-        public static Encoding DefEncoding = Encoding.Unicode;//Default;//
-
-        /// <summary>
-        /// 转换字符串编码
-        /// </summary>
-        /// <param name="str">字符串</param>
-        /// <param name="originalEncode">原编码</param>
-        /// <param name="targetEncode">目标编码</param>
-        /// <returns>转换编码后的字符串</returns>
-        public static string TransferStr(this string str, Encoding originalEncode, Encoding targetEncode)
+        public static string ExePath = @"E:\zifeiobject\RPAAP\RPAAP\bin\Debug\ResponseClientStdTest.exe";
+        public static RequestClientStd R
         {
-            byte[] unicodeBytes = originalEncode.GetBytes(str);
-            byte[] asciiBytes = Encoding.Convert(originalEncode, targetEncode, unicodeBytes);
-            char[] asciiChars = new char[targetEncode.GetCharCount(asciiBytes, 0, asciiBytes.Length)];
-            targetEncode.GetChars(asciiBytes, 0, asciiBytes.Length, asciiChars, 0);
-            string result = new string(asciiChars);
-            return result;
-        }
-
-        /// <summary>
-        /// 从标准输入输出中读取一行
-        /// 查考链接 https://xiu2.net/it/details/60f105837919366004f7232b
-        /// </summary>
-        /// <param name="READLINE_BUFFER_SIZE">缓冲区大小</param>
-        /// <returns></returns>
-        public static string ReadLine(int READLINE_BUFFER_SIZE = 1000)
-        {
-            Stream inputStream = Console.OpenStandardInput(READLINE_BUFFER_SIZE);
-            byte[] bytes = new byte[READLINE_BUFFER_SIZE];
-            int outputLength = inputStream.Read(bytes, 0, READLINE_BUFFER_SIZE);
-
-            for (int i = outputLength - 1; i >= 0; --i)
+            get
             {
-                if (bytes[i].Equals((byte)'\r') || bytes[i].Equals((byte)'\n'))
+                if (r == null)
                 {
-                    --outputLength;
+                    if (!File.Exists(ExePath))
+                    {
+                        throw new Exception("没有找到ExePath(" + ExePath + ")文件");
+                    }
+                    r = new RequestClientStd(ExePath);
                 }
-                else
+                return r;
+            }
+            set
+            {
+                if (value == null)
                 {
-                    break;
+                    using (r) { };
+                    r = value;
                 }
             }
-
-            char[] chars = Console.InputEncoding.GetChars(bytes, 0, outputLength);
-            return new string(chars);
         }
+
+        /// <summary>
+        /// 版本号
+        /// </summary>
+        public static Version Version => version;
+        public const string Version_s = "0.1.0.0";
+        public static Encoding DefEncoding => defEncoding;
+
+        private static RequestClientStd r;
+        private static readonly Version version = new Version(Version_s);
+        public static Encoding defEncoding = new UTF8Encoding(false);
     }
 }

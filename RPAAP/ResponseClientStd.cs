@@ -19,8 +19,6 @@ namespace RPAAP
 
         }
 
-        private const int READLINE_BUFFER_SIZE = 10000000;
-
         protected override RequestData Request()
         {
             //string s = Tool.ReadLine(READLINE_BUFFER_SIZE);
@@ -40,12 +38,13 @@ namespace RPAAP
         protected override ResponseData RunAction(RequestData requestData)
         {
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            return new ResponseData(new Dictionary<string, Param>() {
-                { "ObjectName", new Param(requestData.ObjectName)},
-                { "Action", new Param(requestData.Action)},
-                { "test", new Param("说说 說說")},
-                { "a", new Param((string)requestData.InputParams["a"].Value)}
-            });
+            throw new Exception("说说 說說");
+            //return new ResponseData(new Dictionary<string, Param>() {
+            //    { "ObjectName", new Param(requestData.ObjectName)},
+            //    { "Action", new Param(requestData.Action)},
+            //    { "test", new Param("说说 說說")},
+            //    { "a", new Param((string)requestData.InputParams["a"].Value)}
+            //});
         }
 
         protected override void Response(ResponseData responseData)

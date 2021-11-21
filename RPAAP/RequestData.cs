@@ -41,7 +41,7 @@ namespace RPAAP
         }
 
         [JsonProperty]
-        private readonly Version version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+        private readonly Version version = Tool.Version;
 
         [JsonProperty]
         private readonly string objectName;

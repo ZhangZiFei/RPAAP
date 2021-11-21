@@ -5,10 +5,11 @@ namespace RPAAP
     /// <summary>
     /// RPA Action请求端
     /// </summary>
-    public abstract class RequestClient
+    public abstract class RequestClient : System.IDisposable
     {
         public RequestClient()
         {
+
         }
 
         /// <summary>
@@ -29,5 +30,7 @@ namespace RPAAP
         /// <param name="requestData">请求数据</param>
         /// <returns>响应数据</returns>
         protected abstract ResponseData Request(RequestData requestData);
+        public abstract void Dispose();
+
     }
 }
